@@ -51,6 +51,7 @@ const cardTemplates: CardTemplate[] = [
   { id: '3', name: 'Ocean Blue', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', textColor: '#ffffff' },
   { id: '4', name: 'Fresh Green', gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', textColor: '#ffffff' },
   { id: '5', name: 'Sunset Orange', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', textColor: '#ffffff' },
+  { id: '6', name: 'Bengali Teacher', gradient: '#ffffff', textColor: '#000000' },
 ];
 
 const defaultElementPositions = {
@@ -508,137 +509,254 @@ export function TeacherIdGenerator() {
             {/* ID Card */}
             <Card
               id="id-card"
-              className={`w-96 h-60 shadow-2xl p-4 relative overflow-hidden id-card-template-${selectedTemplate}`}
+              className={`${selectedTemplate === '6' ? 'w-64 h-96' : 'w-96 h-60'} shadow-2xl relative overflow-hidden id-card-template-${selectedTemplate}`}
               style={{
                 fontFamily: cardLayout.fontFamily,
                 borderRadius: `${cardLayout.borderRadius}px`,
-                background: currentTemplate.gradient,
+                background: selectedTemplate === '6' ? '#ffffff' : currentTemplate.gradient,
               }}
               onClick={() => selectElement(null)}
               data-testid="id-card"
             >
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-4 right-4 w-32 h-32 border border-white/20 rounded-full" />
-                <div className="absolute bottom-4 left-4 w-24 h-24 border border-white/20 rounded-full" />
-              </div>
-
-              {/* School Logo */}
-              <DraggableElement
-                id="school-logo"
-                position={getElementPosition('school-logo')}
-                isEditMode={isEditMode}
-                isSelected={selectedElement === 'school-logo'}
-                onSelect={() => selectElement('school-logo')}
-                onPositionChange={(pos) => updateElementPosition('school-logo', pos)}
-              >
-                <div className="w-full h-full bg-white/20 rounded-lg flex items-center justify-center border border-white/30">
-                  {logoUrl ? (
-                    <img
-                      src={logoUrl}
-                      alt="School Logo"
-                      className="w-full h-full object-contain rounded-lg"
+              {selectedTemplate === '6' ? (
+                /* Bengali Teacher ID Card Layout */
+                <div className="w-full h-full relative">
+                  {/* Geometric Background */}
+                  <div className="absolute inset-0">
+                    {/* Navy diagonal section */}
+                    <div 
+                      className="absolute top-0 left-0 w-full h-full"
+                      style={{
+                        background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
+                        clipPath: 'polygon(0 0, 100% 0, 60% 100%, 0 85%)'
+                      }}
                     />
-                  ) : (
-                    <School className="text-white/60 text-xl" />
-                  )}
-                </div>
-              </DraggableElement>
-
-              {/* School Name */}
-              <DraggableElement
-                id="school-name"
-                position={getElementPosition('school-name')}
-                isEditMode={isEditMode}
-                isSelected={selectedElement === 'school-name'}
-                onSelect={() => selectElement('school-name')}
-                onPositionChange={(pos) => updateElementPosition('school-name', pos)}
-              >
-                <h1 className="text-white font-bold text-lg leading-tight">
-                  {watchedValues.schoolName || 'School Name'}
-                </h1>
-              </DraggableElement>
-
-              {/* Teacher Photo */}
-              <DraggableElement
-                id="teacher-photo"
-                position={getElementPosition('teacher-photo')}
-                isEditMode={isEditMode}
-                isSelected={selectedElement === 'teacher-photo'}
-                onSelect={() => selectElement('teacher-photo')}
-                onPositionChange={(pos) => updateElementPosition('teacher-photo', pos)}
-              >
-                <div className="w-full h-full bg-white/20 rounded-lg overflow-hidden border border-white/30">
-                  {photoUrl ? (
-                    <img
-                      src={photoUrl}
-                      alt="Teacher Photo"
-                      className="w-full h-full object-cover"
+                    {/* Green diagonal section */}
+                    <div 
+                      className="absolute top-0 right-0 w-full h-full"
+                      style={{
+                        background: 'linear-gradient(135deg, #68d391 0%, #38a169 100%)',
+                        clipPath: 'polygon(40% 0, 100% 0, 100% 100%, 80% 100%)'
+                      }}
                     />
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <User className="text-white/60 text-2xl" />
+                  </div>
+
+                  {/* Top Logo/Emblem Section */}
+                  <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+                    {logoUrl ? (
+                      <img
+                        src={logoUrl}
+                        alt="School Logo"
+                        className="w-12 h-12 object-contain bg-white rounded-lg p-1"
+                        data-testid="card-logo"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
+                        <School className="text-gray-600 text-lg" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Top Right Logo */}
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <div className="text-white text-xs font-bold">🏛</div>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </DraggableElement>
+                  </div>
 
-              {/* Teacher Information */}
-              <DraggableElement
-                id="teacher-info"
-                position={getElementPosition('teacher-info')}
-                isEditMode={isEditMode}
-                isSelected={selectedElement === 'teacher-info'}
-                onSelect={() => selectElement('teacher-info')}
-                onPositionChange={(pos) => updateElementPosition('teacher-info', pos)}
-              >
-                <div className="text-white">
-                  <h2 className="font-bold text-base mb-1">
-                    {watchedValues.name || 'Teacher Name'}
-                  </h2>
-                  <p className="text-white/90 text-sm mb-1">
-                    {watchedValues.designation || 'Designation'}
-                  </p>
-                  <p className="text-white/80 text-xs mb-1">
-                    {watchedValues.department || 'Department'}
-                  </p>
-                  <p className="text-white/80 text-xs">
-                    ID: {watchedValues.teacherId || 'ID'}
-                  </p>
-                </div>
-              </DraggableElement>
+                  {/* Circular Photo Frame */}
+                  <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="w-24 h-24 rounded-full bg-white p-1">
+                      <div className="w-full h-full rounded-full overflow-hidden border-4 border-gray-600">
+                        {photoUrl ? (
+                          <img
+                            src={photoUrl}
+                            alt="Teacher Photo"
+                            className="w-full h-full object-cover"
+                            data-testid="card-photo"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <User className="text-gray-400 text-xl" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
-              {/* QR Code */}
-              <DraggableElement
-                id="qr-code"
-                position={getElementPosition('qr-code')}
-                isEditMode={isEditMode}
-                isSelected={selectedElement === 'qr-code'}
-                onSelect={() => selectElement('qr-code')}
-                onPositionChange={(pos) => updateElementPosition('qr-code', pos)}
-              >
-                <div className="w-full h-full bg-white rounded-lg p-1">
-                  <QRGenerator
-                    settings={qrSettings}
-                    data={generateQRCodeData()}
-                    className="w-full h-full"
-                  />
-                </div>
-              </DraggableElement>
+                  {/* Information Table */}
+                  <div className="absolute bottom-24 left-4 right-4 bg-white rounded-lg z-10">
+                    <table className="w-full text-xs" data-testid="info-table">
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="py-2 px-2 font-medium bg-gray-50 w-24">Full Name:</td>
+                          <td className="py-2 px-2 text-gray-800 font-medium">
+                            {watchedValues.name || 'MD. ANWAR HOSSAIN'}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="py-2 px-2 font-medium bg-gray-50">Qualification:</td>
+                          <td className="py-2 px-2 text-gray-800">
+                            {watchedValues.designation || 'B.A.(Hons in English)'}<br/>
+                            {watchedValues.department || 'M.A(English),'}
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="py-2 px-2 font-medium bg-gray-50">Teacher ID:</td>
+                          <td className="py-2 px-2 text-gray-800 font-medium">
+                            {watchedValues.teacherId || '2016705294'}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 px-2 font-medium bg-gray-50">Working Since:</td>
+                          <td className="py-2 px-2 text-gray-800">
+                            {watchedValues.issueDate || '2012-09-03'}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
 
-              {/* Issue/Expiry Dates */}
-              <DraggableElement
-                id="dates-info"
-                position={getElementPosition('dates-info')}
-                isEditMode={isEditMode}
-                isSelected={selectedElement === 'dates-info'}
-                onSelect={() => selectElement('dates-info')}
-                onPositionChange={(pos) => updateElementPosition('dates-info', pos)}
-              >
-                <p className="text-white/80 text-xs">
-                  Issue: {watchedValues.issueDate || '—'} • Expiry: {watchedValues.expiryDate || '—'}
-                </p>
-              </DraggableElement>
+                  {/* Large TEACHER Text */}
+                  <div className="absolute bottom-2 left-4 z-10">
+                    <h2 
+                      className="text-gray-800 font-black text-2xl tracking-wide"
+                      data-testid="teacher-label"
+                      style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}
+                    >
+                      TEACHER
+                    </h2>
+                  </div>
+                </div>
+              ) : (
+                /* Default Template Layout */
+                <>
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute top-4 right-4 w-32 h-32 border border-white/20 rounded-full" />
+                    <div className="absolute bottom-4 left-4 w-24 h-24 border border-white/20 rounded-full" />
+                  </div>
+
+                  {/* School Logo */}
+                  <DraggableElement
+                    id="school-logo"
+                    position={getElementPosition('school-logo')}
+                    isEditMode={isEditMode}
+                    isSelected={selectedElement === 'school-logo'}
+                    onSelect={() => selectElement('school-logo')}
+                    onPositionChange={(pos) => updateElementPosition('school-logo', pos)}
+                  >
+                    <div className="w-full h-full bg-white/20 rounded-lg flex items-center justify-center border border-white/30">
+                      {logoUrl ? (
+                        <img
+                          src={logoUrl}
+                          alt="School Logo"
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                      ) : (
+                        <School className="text-white/60 text-xl" />
+                      )}
+                    </div>
+                  </DraggableElement>
+
+                  {/* School Name */}
+                  <DraggableElement
+                    id="school-name"
+                    position={getElementPosition('school-name')}
+                    isEditMode={isEditMode}
+                    isSelected={selectedElement === 'school-name'}
+                    onSelect={() => selectElement('school-name')}
+                    onPositionChange={(pos) => updateElementPosition('school-name', pos)}
+                  >
+                    <h1 className="text-white font-bold text-lg leading-tight">
+                      {watchedValues.schoolName || 'School Name'}
+                    </h1>
+                  </DraggableElement>
+
+                  {/* Teacher Photo */}
+                  <DraggableElement
+                    id="teacher-photo"
+                    position={getElementPosition('teacher-photo')}
+                    isEditMode={isEditMode}
+                    isSelected={selectedElement === 'teacher-photo'}
+                    onSelect={() => selectElement('teacher-photo')}
+                    onPositionChange={(pos) => updateElementPosition('teacher-photo', pos)}
+                  >
+                    <div className="w-full h-full bg-white/20 rounded-lg overflow-hidden border border-white/30">
+                      {photoUrl ? (
+                        <img
+                          src={photoUrl}
+                          alt="Teacher Photo"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <User className="text-white/60 text-2xl" />
+                        </div>
+                      )}
+                    </div>
+                  </DraggableElement>
+
+                  {/* Teacher Information */}
+                  <DraggableElement
+                    id="teacher-info"
+                    position={getElementPosition('teacher-info')}
+                    isEditMode={isEditMode}
+                    isSelected={selectedElement === 'teacher-info'}
+                    onSelect={() => selectElement('teacher-info')}
+                    onPositionChange={(pos) => updateElementPosition('teacher-info', pos)}
+                  >
+                    <div className="text-white">
+                      <h2 className="font-bold text-base mb-1">
+                        {watchedValues.name || 'Teacher Name'}
+                      </h2>
+                      <p className="text-white/90 text-sm mb-1">
+                        {watchedValues.designation || 'Designation'}
+                      </p>
+                      <p className="text-white/80 text-xs mb-1">
+                        {watchedValues.department || 'Department'}
+                      </p>
+                      <p className="text-white/80 text-xs">
+                        ID: {watchedValues.teacherId || 'ID'}
+                      </p>
+                    </div>
+                  </DraggableElement>
+
+                  {/* QR Code */}
+                  <DraggableElement
+                    id="qr-code"
+                    position={getElementPosition('qr-code')}
+                    isEditMode={isEditMode}
+                    isSelected={selectedElement === 'qr-code'}
+                    onSelect={() => selectElement('qr-code')}
+                    onPositionChange={(pos) => updateElementPosition('qr-code', pos)}
+                  >
+                    <div className="w-full h-full bg-white rounded-lg p-1">
+                      <QRGenerator
+                        settings={qrSettings}
+                        data={generateQRCodeData()}
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </DraggableElement>
+
+                  {/* Issue/Expiry Dates */}
+                  <DraggableElement
+                    id="dates-info"
+                    position={getElementPosition('dates-info')}
+                    isEditMode={isEditMode}
+                    isSelected={selectedElement === 'dates-info'}
+                    onSelect={() => selectElement('dates-info')}
+                    onPositionChange={(pos) => updateElementPosition('dates-info', pos)}
+                  >
+                    <p className="text-white/80 text-xs">
+                      Issue: {watchedValues.issueDate || '—'} • Expiry: {watchedValues.expiryDate || '—'}
+                    </p>
+                  </DraggableElement>
+                </>
+              )}
             </Card>
           </CanvasEditor>
 
