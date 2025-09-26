@@ -89,7 +89,8 @@
   }
 
   .drag-over {
-    @apply border-2 border-dashed border-primary bg-primary/5;
+    @apply border-2 border-dashed border-primary;
+    background-color: hsl(var(--primary) / 0.05);
   }
 
   .draggable-element {
