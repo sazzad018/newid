@@ -567,9 +567,9 @@ export function TeacherIdGenerator() {
                   </div>
 
                   {/* Circular Photo Frame */}
-                  <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className="w-24 h-24 rounded-full bg-white p-1">
-                      <div className="w-full h-full rounded-full overflow-hidden border-4 border-gray-600">
+                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="w-28 h-28 rounded-full bg-white p-1">
+                      <div className="w-full h-full rounded-full overflow-hidden border-4 border-gray-700">
                         {photoUrl ? (
                           <img
                             src={photoUrl}
@@ -579,7 +579,7 @@ export function TeacherIdGenerator() {
                           />
                         ) : (
                           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                            <User className="text-gray-400 text-xl" />
+                            <User className="text-gray-400 text-2xl" />
                           </div>
                         )}
                       </div>
@@ -587,31 +587,31 @@ export function TeacherIdGenerator() {
                   </div>
 
                   {/* Information Table */}
-                  <div className="absolute bottom-24 left-4 right-4 bg-white rounded-lg z-10">
+                  <div className="absolute bottom-12 left-4 right-4 bg-white/95 rounded-lg shadow-lg z-10 border">
                     <table className="w-full text-xs" data-testid="info-table">
                       <tbody>
-                        <tr className="border-b">
-                          <td className="py-2 px-2 font-medium bg-gray-50 w-24">Full Name:</td>
-                          <td className="py-2 px-2 text-gray-800 font-medium">
+                        <tr className="border-b border-gray-200">
+                          <td className="py-1.5 px-2 font-semibold bg-gray-100 w-20 text-gray-700">Full Name:</td>
+                          <td className="py-1.5 px-2 text-gray-900 font-medium">
                             {watchedValues.name || 'MD. ANWAR HOSSAIN'}
                           </td>
                         </tr>
-                        <tr className="border-b">
-                          <td className="py-2 px-2 font-medium bg-gray-50">Qualification:</td>
-                          <td className="py-2 px-2 text-gray-800">
+                        <tr className="border-b border-gray-200">
+                          <td className="py-1.5 px-2 font-semibold bg-gray-100 text-gray-700">Qualification:</td>
+                          <td className="py-1.5 px-2 text-gray-900 text-xs leading-tight">
                             {watchedValues.designation || 'B.A.(Hons in English)'}<br/>
                             {watchedValues.department || 'M.A(English),'}
                           </td>
                         </tr>
-                        <tr className="border-b">
-                          <td className="py-2 px-2 font-medium bg-gray-50">Teacher ID:</td>
-                          <td className="py-2 px-2 text-gray-800 font-medium">
+                        <tr className="border-b border-gray-200">
+                          <td className="py-1.5 px-2 font-semibold bg-gray-100 text-gray-700">Teacher ID:</td>
+                          <td className="py-1.5 px-2 text-gray-900 font-bold">
                             {watchedValues.teacherId || '2016705294'}
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2 px-2 font-medium bg-gray-50">Working Since:</td>
-                          <td className="py-2 px-2 text-gray-800">
+                          <td className="py-1.5 px-2 font-semibold bg-gray-100 text-gray-700">Working Since:</td>
+                          <td className="py-1.5 px-2 text-gray-900">
                             {watchedValues.issueDate || '2012-09-03'}
                           </td>
                         </tr>
@@ -620,11 +620,14 @@ export function TeacherIdGenerator() {
                   </div>
 
                   {/* Large TEACHER Text */}
-                  <div className="absolute bottom-2 left-4 z-10">
+                  <div className="absolute bottom-1 left-4 right-4 z-10">
                     <h2 
-                      className="text-gray-800 font-black text-2xl tracking-wide"
+                      className="text-gray-900 font-black text-3xl tracking-wider drop-shadow-sm"
                       data-testid="teacher-label"
-                      style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}
+                      style={{ 
+                        fontFamily: 'Impact, Arial Black, sans-serif',
+                        textShadow: '1px 1px 2px rgba(0,0,0,0.3)'
+                      }}
                     >
                       TEACHER
                     </h2>
