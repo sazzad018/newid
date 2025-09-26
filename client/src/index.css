@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(210, 40%, 98%);
+  --foreground: hsl(222.2, 84%, 4.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222.2, 84%, 4.9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222.2, 84%, 4.9%);
+  --primary: hsl(221.2, 83.2%, 53.3%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(222.2, 84%, 4.9%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215.4, 16.3%, 46.9%);
+  --accent: hsl(159, 83%, 18.9%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --ring: hsl(221.2, 83.2%, 53.3%);
+  --radius: 0.75rem;
+
+  /* Template gradients */
+  --template-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --template-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --template-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --template-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --template-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.dark {
+  --background: hsl(222.2, 84%, 4.9%);
+  --foreground: hsl(210, 40%, 98%);
+  --card: hsl(222.2, 84%, 4.9%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --popover: hsl(222.2, 84%, 4.9%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --primary: hsl(217.2, 91.2%, 59.8%);
+  --primary-foreground: hsl(222.2, 84%, 4.9%);
+  --secondary: hsl(217.2, 32.6%, 17.5%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --muted: hsl(217.2, 32.6%, 17.5%);
+  --muted-foreground: hsl(215, 20.2%, 65.1%);
+  --accent: hsl(159, 83%, 18.9%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --border: hsl(217.2, 32.6%, 17.5%);
+  --input: hsl(217.2, 32.6%, 17.5%);
+  --ring: hsl(224.3, 76.3%, 94.1%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .id-card-template-1 {
+    background: var(--template-1);
+  }
+  
+  .id-card-template-2 {
+    background: var(--template-2);
+  }
+  
+  .id-card-template-3 {
+    background: var(--template-3);
+  }
+  
+  .id-card-template-4 {
+    background: var(--template-4);
+  }
+  
+  .id-card-template-5 {
+    background: var(--template-5);
+  }
+
+  .drag-over {
+    @apply border-2 border-dashed border-primary bg-primary/5;
+  }
+
+  .draggable-element {
+    @apply absolute cursor-move select-none;
+  }
+
+  .draggable-element:hover {
+    @apply outline-2 outline-primary;
+  }
+
+  .draggable-element.selected {
+    @apply outline-2 outline-accent;
+  }
+
+  .resizer {
+    @apply absolute w-2.5 h-2.5 bg-primary border-2 border-white rounded-full cursor-se-resize;
+  }
+
+  .resizer.top-left {
+    @apply -top-1 -left-1 cursor-nw-resize;
+  }
+
+  .resizer.top-right {
+    @apply -top-1 -right-1 cursor-ne-resize;
+  }
+
+  .resizer.bottom-left {
+    @apply -bottom-1 -left-1 cursor-sw-resize;
+  }
+
+  .resizer.bottom-right {
+    @apply -bottom-1 -right-1 cursor-se-resize;
+  }
+
+  .canvas-transform {
+    transform-origin: center;
+    transition: transform 0.2s ease;
+  }
+
+  .toast-enter {
+    @apply transform translate-x-full;
+  }
+
+  .toast-enter-active {
+    @apply transform translate-x-0 transition-transform duration-300;
+  }
+
+  .toast-exit {
+    @apply transform translate-x-0;
+  }
+
+  .toast-exit-active {
+    @apply transform translate-x-full transition-transform duration-300;
+  }
+
+  .tab-btn.active {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .template-option.active {
+    @apply border-primary border-2;
+  }
+
+  .canvas-mode-btn.active {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .print-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    
+    .print-layout {
+      page-break-inside: avoid;
+      transform: scale(1);
+    }
+  }
+}
+
+@layer utilities {
+  .font-inter {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .font-roboto {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .font-open-sans {
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .font-noto-bengali {
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+}
