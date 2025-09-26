@@ -69,6 +69,7 @@ export function TeacherIdGenerator() {
   const [selectedTemplate, setSelectedTemplate] = useLocalStorage('selectedTemplate', '1');
   const [photoUrl, setPhotoUrl] = useState<string>('');
   const [logoUrl, setLogoUrl] = useState<string>('');
+  const [signatureUrl, setSignatureUrl] = useState<string>('');
   const [activeTab, setActiveTab] = useState('basic');
   
   const { t } = useTranslation(language);
@@ -124,6 +125,7 @@ export function TeacherIdGenerator() {
     elementPositions,
     photoUrl,
     logoUrl,
+    signatureUrl,
   });
 
   // Dark mode effect
@@ -169,6 +171,20 @@ export function TeacherIdGenerator() {
   const handleLogoRemove = () => {
     setLogoUrl('');
     form.setValue('logoUrl', '');
+  };
+
+  const handleSignatureUpload = async (file: File) => {
+    try {
+      const dataUrl = await fileToDataURL(file);
+      setSignatureUrl(dataUrl);
+      toast({ title: 'Signature uploaded successfully' });
+    } catch (error) {
+      toast({ title: 'Failed to upload signature', variant: 'destructive' });
+    }
+  };
+
+  const handleSignatureRemove = () => {
+    setSignatureUrl('');
   };
 
   const handleExportPNG = async () => {
@@ -370,6 +386,19 @@ export function TeacherIdGenerator() {
                     data-testid="logo-upload"
                   >
                     <p className="text-sm text-muted-foreground">{t('logoUploadText')}</p>
+                  </FileUpload>
+                </div>
+
+                <div>
+                  <Label>Headmaster Signature</Label>
+                  <FileUpload
+                    accept="image/*"
+                    onFileSelect={handleSignatureUpload}
+                    onRemove={handleSignatureRemove}
+                    preview={signatureUrl}
+                    data-testid="signature-upload"
+                  >
+                    <p className="text-sm text-muted-foreground">Upload headmaster's signature image</p>
                   </FileUpload>
                 </div>
               </div>
@@ -587,7 +616,7 @@ export function TeacherIdGenerator() {
                   </div>
 
                   {/* Information Table */}
-                  <div className="absolute bottom-12 left-4 right-4 bg-white/95 rounded-lg shadow-lg z-10 border">
+                  <div className="absolute bottom-12 left-4 right-20 bg-white/95 rounded-lg shadow-lg z-10 border">
                     <table className="w-full text-xs" data-testid="info-table">
                       <tbody>
                         <tr className="border-b border-gray-200">
@@ -618,6 +647,23 @@ export function TeacherIdGenerator() {
                       </tbody>
                     </table>
                   </div>
+
+                  {/* Headmaster Signature */}
+                  {signatureUrl && (
+                    <div className="absolute bottom-12 right-4 z-10 bg-white/95 rounded border shadow-lg w-16">
+                      <div className="text-center p-1">
+                        <img
+                          src={signatureUrl}
+                          alt="Headmaster Signature"
+                          className="w-full h-6 object-contain"
+                          data-testid="card-signature"
+                        />
+                        <div className="text-[8px] text-gray-600 mt-1 border-t border-gray-300 pt-1">
+                          Headmaster
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Large TEACHER Text */}
                   <div className="absolute bottom-1 left-4 right-4 z-10">
