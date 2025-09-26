@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teacher ID Card Generator</title>
+  <style>
+    body{font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial; padding:20px; background:#f3f4f6}
+    .container{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:20px}
+    .panel{background:#fff;padding:16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    label{display:block;margin-top:10px;font-size:14px}
+    input[type=text], select{width:100%;padding:8px;border-radius:6px;border:1px solid #d1d5db}
+    input[type=file]{margin-top:8px}
+    button{margin-top:12px;padding:10px 14px;border-radius:8px;border:none;background:#0ea5a4;color:#fff;cursor:pointer}
+
+    /* ID card preview */
+    .id-card{width:360px;height:220px;border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,0.12);background:linear-gradient(180deg,#ffffff 0%, #eef2f7 100%);position:relative}
+    .school-name{font-weight:700;font-size:14px}
+    .logo{position:absolute;top:14px;right:14px;width:56px;height:56px;border-radius:8px;background:#e2e8f0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:700;color:#334155}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .photo{width:86px;height:86px;border-radius:8px;background:#e6e6e6;overflow:hidden;display:inline-block}
+    .photo img{width:100%;height:100%;object-fit:cover}
+    .info{display:inline-block;vertical-align:top;margin-left:12px;width:220px}
+    .name{font-size:16px;font-weight:700;margin-top:6px}
+    .designation{font-size:13px;color:#475569}
+    .meta{margin-top:10px;font-size:12px;color:#475569}
+    .qr{position:absolute;bottom:14px;right:14px;width:72px;height:72px}
+    .footer{position:absolute;bottom:12px;left:14px;font-size:11px;color:#334155}
+
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .secondary{background:#64748b}
+
+    @media print{
+      body{background:#fff}
+      .container{grid-template-columns:1fr}
+      .panel{box-shadow:none}
+      button{display:none}
+    }
+  </style>
+</head>
+<body>
+  <h2>শিক্ষক ID কার্ড জেনারেটর</h2>
+  <div class="container">
+    <div class="panel">
+      <p>নীচে শিক্ষকের তথ্য দিন — তারপর <strong>Generate</strong> ক্লিক করুন।</p>
+      <label>নাম</label>
+      <input id="name" type="text" value="Md. Example Teacher">
+
+      <label>পদবি</label>
+      <input id="designation" type="text" value="Senior Teacher">
+
+      <label>বিভাগ/ক্লাস</label>
+      <input id="department" type="text" value="Science Department">
+
+      <label>ID নম্বর</label>
+      <input id="idnumber" type="text" value="TCHR-2025-001">
+
+      <label>ইস্যু তারিখ</label>
+      <input id="issue" type="text" value="2025-09-26">
+
+      <label>মেয়াদ শেষ</label>
+      <input id="expiry" type="text" value="2026-09-25">
+
+      <label>ছবি আপলোড (JPEG/PNG)</label>
+      <input id="photoInput" type="file" accept="image/*">
+
+      <label>স্কুল/প্রতিষ্ঠানের নাম (উপরে দেখাবে)</label>
+      <input id="school" type="text" value="ABC High School">
+
+      <label>লোগো আপলোড (JPEG/PNG)</label>
+      <input id="logoInput" type="file" accept="image/*">
+
+      <div style="margin-top:12px" class="actions">
+        <button id="applyBtn">Apply to preview</button>
+        <button id="generateBtn">Generate image</button>
+        <button id="savePdfBtn">Save as PDF</button>
+        <button id="printBtn" class="secondary">Print</button>
+      </div>
+
+      <p style="margin-top:10px;font-size:13px;color:#334155">বিকল্প: আপনি CSV থেকে ডেটা ইমপোর্ট করে ব্যাচ প্রিন্টও করতে পারেন — এটা চাইলে আমি সেটাও করে দেব।</p>
+    </div>
+
+    <div class="panel" style="display:flex;align-items:center;justify-content:center">
+      <!-- Preview area -->
+      <div id="previewWrapper">
+        <div id="idCard" class="id-card">
+          <div class="school-name" id="previewSchool">ABC High School</div>
+          <div class="logo" id="previewLogo"><img src="" alt="" style="display:none"></div>
+
+          <div style="display:flex;align-items:center;margin-top:18px">
+            <div class="photo" id="previewPhoto"><img src="" alt="" style="display:none"></div>
+            <div class="info">
+              <div class="name" id="previewName">Md. Example Teacher</div>
+              <div class="designation" id="previewDesignation">Senior Teacher</div>
+              <div class="meta" id="previewDept">Science Department</div>
+              <div class="meta">ID: <span id="previewId">TCHR-2025-001</span></div>
+            </div>
+          </div>
+
+          <div class="footer" id="previewDates">Issue: 2025-09-26  •  Expiry: 2026-09-25</div>
+          <div id="qrcode" class="qr"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- external libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    const nameInput = document.getElementById('name');
+    const designationInput = document.getElementById('designation');
+    const deptInput = document.getElementById('department');
+    const idInput = document.getElementById('idnumber');
+    const issueInput = document.getElementById('issue');
+    const expiryInput = document.getElementById('expiry');
+    const schoolInput = document.getElementById('school');
+    const photoInput = document.getElementById('photoInput');
+    const logoInput = document.getElementById('logoInput');
+
+    const previewName = document.getElementById('previewName');
+    const previewDesignation = document.getElementById('previewDesignation');
+    const previewDept = document.getElementById('previewDept');
+    const previewId = document.getElementById('previewId');
+    const previewDates = document.getElementById('previewDates');
+    const previewSchool = document.getElementById('previewSchool');
+    const previewPhoto = document.querySelector('#previewPhoto img');
+    const previewLogo = document.querySelector('#previewLogo img');
+
+    let qr;
+    function updatePreview(){
+      previewName.textContent = nameInput.value || '—';
+      previewDesignation.textContent = designationInput.value || '—';
+      previewDept.textContent = deptInput.value || '—';
+      previewId.textContent = idInput.value || '—';
+      previewDates.textContent = `Issue: ${issueInput.value || '—'}  •  Expiry: ${expiryInput.value || '—'}`;
+      previewSchool.textContent = schoolInput.value || '—';
+
+      // regenerate QR
+      const qElem = document.getElementById('qrcode');
+      qElem.innerHTML = '';
+      qr = new QRCode(qElem, {text: idInput.value || '', width:72, height:72});
+    }
+
+    document.getElementById('applyBtn').addEventListener('click', (e)=>{ e.preventDefault(); updatePreview(); });
+
+    photoInput.addEventListener('change', function(){
+      const file = this.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt){
+        previewPhoto.src = evt.target.result;
+        previewPhoto.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    });
+
+    logoInput.addEventListener('change', function(){
+      const file = this.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt){
+        previewLogo.src = evt.target.result;
+        previewLogo.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('generateBtn').addEventListener('click', async function(e){
+      e.preventDefault(); updatePreview();
+      const card = document.getElementById('idCard');
+      // render with html2canvas
+      const canvas = await html2canvas(card, {scale:2});
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = (idInput.value || 'teacher-id') + '.png';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    // Save as PDF
+    document.getElementById('savePdfBtn').addEventListener('click', async function(e){
+      e.preventDefault(); updatePreview();
+      const card = document.getElementById('idCard');
+      // increase scale for better quality
+      const canvas = await html2canvas(card, {scale:2});
+      const imgData = canvas.toDataURL('image/png');
+
+      const { jsPDF } = window.jspdf;
+      // use pt units and set PDF size to the card's pixel size for cut-size output
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: [card.offsetWidth, card.offsetHeight] });
+      pdf.addImage(imgData, 'PNG', 0, 0, card.offsetWidth, card.offsetHeight);
+      pdf.save((idInput.value || 'teacher-id') + '.pdf');
+    });
+
+    document.getElementById('printBtn').addEventListener('click', function(){ updatePreview(); window.print(); });
+
+    // initial preview
+    updatePreview();
+  </script>
+</body>
+</html>
