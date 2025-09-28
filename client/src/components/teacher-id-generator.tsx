@@ -10,7 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
 import { FileUpload } from '@/components/ui/file-upload';
 import { TemplateSelector } from '@/components/ui/template-selector';
-import { QRGenerator } from '@/components/ui/qr-generator';
 import { DraggableElement } from '@/components/ui/draggable-element';
 import { CanvasEditor } from '@/components/ui/canvas-editor';
 import { PropertiesPanel } from '@/components/ui/properties-panel';
@@ -18,14 +17,12 @@ import { BatchProcessor } from '@/components/ui/batch-processor';
 import { useCanvasEditor } from '@/hooks/use-canvas-editor';
 import { useLocalStorage, useAutoSave } from '@/hooks/use-local-storage';
 import { useTranslation, Language } from '@/lib/translations';
-import { generateQRData } from '@/lib/qr-generator';
 import { fileToDataURL } from '@/lib/image-utils';
 import { exportToPNG, exportToPDF, printCard } from '@/lib/pdf-generator';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Teacher, 
   CardTemplate, 
-  QRCodeSettings, 
   CardLayout, 
   BatchSettings,
   teacherSchema 
@@ -87,10 +84,6 @@ export function TeacherIdGenerator() {
     getElementPosition,
   } = useCanvasEditor(defaultElementPositions);
 
-  const [qrSettings, setQrSettings] = useLocalStorage<QRCodeSettings>('qrSettings', {
-    type: 'id',
-    size: 80,
-  });
 
   const [cardLayout, setCardLayout] = useLocalStorage<CardLayout>('cardLayout', {
     orientation: 'landscape',
@@ -120,7 +113,6 @@ export function TeacherIdGenerator() {
   useAutoSave('teacherIdCardData', {
     formData: watchedValues,
     selectedTemplate,
-    qrSettings,
     cardLayout,
     elementPositions,
     photoUrl,
@@ -223,14 +215,6 @@ export function TeacherIdGenerator() {
     // TODO: Implement batch processing logic
   };
 
-  const generateQRCodeData = () => {
-    return generateQRData(qrSettings, {
-      teacherId: watchedValues.teacherId || '',
-      name: watchedValues.name || '',
-      department: watchedValues.department || '',
-      customText: qrSettings.customText,
-    });
-  };
 
   const currentTemplate = cardTemplates.find(t => t.id === selectedTemplate) || cardTemplates[0];
 
@@ -433,53 +417,6 @@ export function TeacherIdGenerator() {
                 </Select>
               </div>
 
-              <div>
-                <h3 className="text-lg font-semibold mb-3">{t('qrTitle')}</h3>
-                <div className="space-y-3">
-                  <div>
-                    <Label>{t('labelQrData')}</Label>
-                    <Select
-                      value={qrSettings.type}
-                      onValueChange={(value: 'id' | 'full' | 'custom' | 'url') => 
-                        setQrSettings(prev => ({ ...prev, type: value }))
-                      }
-                    >
-                      <SelectTrigger data-testid="qr-data-type-select">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="id">Teacher ID Only</SelectItem>
-                        <SelectItem value="full">Full Information</SelectItem>
-                        <SelectItem value="custom">Custom Text</SelectItem>
-                        <SelectItem value="url">Website URL</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  {qrSettings.type === 'custom' && (
-                    <Input
-                      placeholder="Enter custom QR text"
-                      value={qrSettings.customText || ''}
-                      onChange={(e) => setQrSettings(prev => ({ ...prev, customText: e.target.value }))}
-                      data-testid="qr-custom-text"
-                    />
-                  )}
-                  
-                  <div className="flex items-center space-x-3">
-                    <Label className="text-sm font-medium">{t('labelQrSize')}</Label>
-                    <Slider
-                      value={[qrSettings.size]}
-                      onValueChange={([value]) => setQrSettings(prev => ({ ...prev, size: value }))}
-                      min={60}
-                      max={120}
-                      step={5}
-                      className="flex-1"
-                      data-testid="qr-size-slider"
-                    />
-                    <span className="text-sm">{qrSettings.size}px</span>
-                  </div>
-                </div>
-              </div>
 
               <div>
                 <h3 className="text-lg font-semibold mb-3">{t('layoutTitle')}</h3>
@@ -773,23 +710,6 @@ export function TeacherIdGenerator() {
                     </div>
                   </DraggableElement>
 
-                  {/* QR Code */}
-                  <DraggableElement
-                    id="qr-code"
-                    position={getElementPosition('qr-code')}
-                    isEditMode={isEditMode}
-                    isSelected={selectedElement === 'qr-code'}
-                    onSelect={() => selectElement('qr-code')}
-                    onPositionChange={(pos) => updateElementPosition('qr-code', pos)}
-                  >
-                    <div className="w-full h-full bg-white rounded-lg p-1">
-                      <QRGenerator
-                        settings={qrSettings}
-                        data={generateQRCodeData()}
-                        className="w-full h-full"
-                      />
-                    </div>
-                  </DraggableElement>
 
                   {/* Issue/Expiry Dates */}
                   <DraggableElement
